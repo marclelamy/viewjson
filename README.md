@@ -1,4 +1,4 @@
-# JSON Preview
+# View json
 
 ![JSON Preview Screenshot](https://oh28wvg0kw.ufs.sh/f/Uq9yFdNAkVnxJZEqkWOoQ2PD48E517OZeNmAIdfgXpj6cnJh)
 
