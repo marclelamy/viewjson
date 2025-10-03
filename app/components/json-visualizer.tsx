@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import ReactFlow, {
     Background,
     useNodesState,
@@ -36,6 +36,7 @@ export default function JsonVisualizer({ jsonText, onJsonRepair }: JsonVisualize
     const [error, setError] = useState<string | null>(null);
     const [isRepairing, setIsRepairing] = useState(false);
     const [repairSuccess, setRepairSuccess] = useState(false);
+    const justRepairedRef = useRef(false);
 
     const { getLayoutedElements } = useJsonLayout();
     const { jsonToNodes } = useJsonToGraph();
@@ -54,8 +55,12 @@ export default function JsonVisualizer({ jsonText, onJsonRepair }: JsonVisualize
             onJsonRepair(repairedJson);
             setError(null);
             setRepairSuccess(true);
+            justRepairedRef.current = true;
             // Hide success message after 3 seconds
-            setTimeout(() => setRepairSuccess(false), 3000);
+            setTimeout(() => {
+                setRepairSuccess(false);
+                justRepairedRef.current = false;
+            }, 3000);
         } catch (repairError) {
             // If repair fails, update error message
             setError(`Failed to repair JSON: ${(repairError as Error).message}`);
@@ -65,8 +70,11 @@ export default function JsonVisualizer({ jsonText, onJsonRepair }: JsonVisualize
     };
 
     useEffect(() => {
-        setRepairSuccess(false); // Clear success message when JSON changes
-        
+        // Clear success message when JSON changes, unless we just repaired it
+        if (!justRepairedRef.current) {
+            setRepairSuccess(false);
+        }
+
         if (!jsonText.trim()) {
             setNodes([]);
             setEdges([]);
@@ -94,7 +102,7 @@ export default function JsonVisualizer({ jsonText, onJsonRepair }: JsonVisualize
         } finally {
             console.error = originalConsoleError; // Always restore console.error
         }
-    }, [jsonText, jsonToNodes, getLayoutedElements, setNodes, setEdges]);
+    }, [jsonText, jsonToNodes, getLayoutedElements, setNodes, setEdges, repairSuccess]);
 
     return (
         <div className="w-full h-full relative bg-background">
@@ -108,7 +116,7 @@ export default function JsonVisualizer({ jsonText, onJsonRepair }: JsonVisualize
                             <button
                                 onClick={handleRepairJson}
                                 disabled={isRepairing}
-                                className="px-4 py-2 bg-destructive text-destructive-foreground hover:bg-destructive/90 rounded-md font-medium text-sm transition-colors disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap"
+                                className="px-4 py-2 bg-accent text-accent-foreground hover:bg-accent/90 rounded-md font-medium text-sm transition-colors disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap"
                             >
                                 {isRepairing ? 'Repairing...' : 'Repair JSON'}
                             </button>

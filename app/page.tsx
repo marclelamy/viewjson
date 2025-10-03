@@ -9,26 +9,49 @@ import {
 } from "@/components/ui/resizable";
 
 const exampleJson = `{
-    "id": 12345,
+  "id": 12345,
+  "profile": {
     "name": "John Doe",
-    "age": 30,
-    "email": "john@example.com",
-    "isActive": true,
-    "score": 98.7,
-    "nullField": null,
-    "address": {
-      "street": "123 Main St",
-      "city": "New York",
-      "country": "USA",
-      "coordinates": {
-        "lat": 40.7128,
-        "lng": -74.0060,
-        "history": [
-          {"lat": 40.7127, "lng": -74.0059, "timestamp": "2023-12-31T23:59:59Z"},
-          {"lat": 40.7126, "lng": -74.0058, "timestamp": "2023-12-30T12:00:00Z"}
-        ]
+    "contacts": [
+      {
+        "type": "email",
+        "value": "john@example.com"
+      },
+      {
+        "type": "phone",
+        "value": "+1-555-1234"
       }
-}}`;
+    ],
+    "isActive": true
+  },
+  "age": 30,
+  "score": 98.7,
+  "nullField": null,
+  "settings": {
+    "theme": "dark",
+    "notifications": {
+      "email": true,
+      "sms": false,
+      "channels": [
+        {"name": "general", "enabled": true},
+        {"name": "alerts", "enabled": false}
+      ]
+    }
+  },
+  "address": {
+    "street": "123 Main St",
+    "city": "New York",
+    "country": "USA",
+    "coordinates": {
+      "lat": 40.7128,
+      "lng": -74.0060,
+      "history": [
+        {"lat": 40.7127, "lng": -74.0059, "timestamp": "2023-12-31T23:59:59Z"},
+        {"lat": 40.7126, "lng": -74.0058, "timestamp": "2023-12-30T12:00:00Z"}
+      ]
+    }
+  }
+}`;
 
 export default function Home() {
     const [jsonText, setJsonText] = useState(exampleJson);
@@ -51,9 +74,9 @@ export default function Home() {
             {/* Left Panel - Text Area */}
             <ResizablePanel defaultSize={20} minSize={0} maxSize={100}>
                 <div className="h-full flex flex-col border-r border-border">
-                    <div className="bg-card px-6 py-4 border-b border-border">
-                        <h1 className="text-xl font-bold text-card-foreground">JSON Input</h1>
-                        <p className="text-sm text-muted-foreground mt-1">Paste or edit your JSON here</p>
+                    <div className="bg-card px-6 py-2 border-b border-border">
+                        <h1 className="text-lg font-bold text-card-foreground">JSON Input</h1>
+                        <p className="text-xs text-muted-foreground mt-0.5">Paste or edit your JSON here</p>
                     </div>
                     <div className="flex-1 overflow-hidden flex">
                         {/* Line numbers */}
@@ -92,13 +115,13 @@ export default function Home() {
             {/* Right Panel - React Flow Visualization */}
             <ResizablePanel defaultSize={80} minSize={0} maxSize={100}>
                 <div className="h-full flex flex-col">
-                    <div className="bg-card px-6 py-4 border-b border-border">
-                        <h1 className="text-xl font-bold text-card-foreground">Graph Visualization</h1>
-                        <p className="text-sm text-muted-foreground mt-1">Interactive JSON structure diagram</p>
+                    <div className="bg-card px-6 py-2 border-b border-border">
+                        <h1 className="text-lg font-bold text-card-foreground">Graph Visualization</h1>
+                        <p className="text-xs text-muted-foreground mt-0.5">Interactive JSON structure diagram</p>
                     </div>
                     <div className="flex-1">
-                        <JsonVisualizer 
-                            jsonText={jsonText} 
+                        <JsonVisualizer
+                            jsonText={jsonText}
                             onJsonRepair={setJsonText}
                         />
                     </div>
