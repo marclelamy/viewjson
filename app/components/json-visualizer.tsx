@@ -11,6 +11,7 @@ import ReactFlow, {
 } from 'reactflow';
 import 'reactflow/dist/style.css';
 import { CustomJsonNode } from './custom-json-node';
+import { CustomJsonEdge } from './custom-json-edge';
 import { useJsonLayout } from './use-json-layout';
 import { useJsonToGraph } from './use-json-to-graph';
 
@@ -18,8 +19,14 @@ interface JsonVisualizerProps {
     jsonText: string;
 }
 
+// Define custom node types outside component to prevent re-renders
 const nodeTypes = {
     customJson: CustomJsonNode,
+};
+
+// Define custom edge types outside component to prevent re-renders
+const edgeTypes = {
+    customJson: CustomJsonEdge,
 };
 
 export default function JsonVisualizer({ jsonText }: JsonVisualizerProps) {
@@ -76,6 +83,7 @@ export default function JsonVisualizer({ jsonText }: JsonVisualizerProps) {
                     onNodesChange={onNodesChange}
                     onEdgesChange={onEdgesChange}
                     nodeTypes={nodeTypes}
+                    edgeTypes={edgeTypes}
                     fitView
                     fitViewOptions={{ padding: 0.1 }}
                     maxZoom={10000}

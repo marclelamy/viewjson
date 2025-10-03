@@ -18,6 +18,7 @@ export function createEdge({ source, target, sourceHandleIndex, label }: CreateE
         sourceHandle,
         targetHandle,
         label,
+        type: 'customJson', // Use custom edge type
         animated: false,
         markerEnd: { type: MarkerType.ArrowClosed },
         className: 'stroke-muted-foreground stroke-2',

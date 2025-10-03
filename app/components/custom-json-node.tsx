@@ -1,8 +1,13 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { Handle, Position, NodeProps } from 'reactflow';
 
-export function CustomJsonNode({ data, id }: NodeProps) {
-    console.log('Rendering node:', id, 'with data:', data);
+/**
+ * Custom node component for JSON graph visualization
+ * Renders JSON values with appropriate styling and handles for connections
+ * 
+ * This component is memoized to prevent unnecessary re-renders as recommended by React Flow
+ */
+export const CustomJsonNode = memo(({ data, id }: NodeProps) => {
     const hasTarget = data.hasParent || false;
     const sourceHandles = data.sourceHandles || [];
 
@@ -41,5 +46,5 @@ export function CustomJsonNode({ data, id }: NodeProps) {
             })}
         </div>
     );
-}
+});
 
