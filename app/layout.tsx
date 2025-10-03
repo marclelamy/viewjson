@@ -51,6 +51,8 @@ export default function RootLayout({
 }>) {
     return (
         <html lang="en" suppressHydrationWarning>
+            <script async src="https://scripts.simpleanalyticscdn.com/latest.js"></script>
+
             <body
                 className={`${geistSans.variable} ${geistMono.variable} antialiased`}
             >
