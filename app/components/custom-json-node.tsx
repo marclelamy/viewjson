@@ -1,5 +1,6 @@
 import React, { memo } from 'react';
 import { Handle, Position, NodeProps } from 'reactflow';
+import { NodeLabel } from './use-json-to-graph';
 
 /**
  * Custom node component for JSON graph visualization
@@ -10,14 +11,42 @@ import { Handle, Position, NodeProps } from 'reactflow';
 export const CustomJsonNode = memo(({ data, id }: NodeProps) => {
     const hasTarget = data.hasParent || false;
     const sourceHandles = data.sourceHandles || [];
+    const label = data.label as NodeLabel;
 
-    // Wrap string labels in a div with truncation and title for tooltip
-    const label = typeof data.label === 'string'
-        ? <div className="overflow-hidden text-ellipsis whitespace-nowrap" title={data.label}>{data.label}</div>
-        : data.label;
+    const renderLabel = () => {
+        if (label.type === 'simple') {
+            return (
+                <div 
+                    className={`overflow-hidden text-ellipsis whitespace-nowrap ${label.colorClass || ''}`}
+                    title={label.text}
+                >
+                    {label.text}
+                </div>
+            );
+        } else {
+            // object type
+            return (
+                <div className="text-left">
+                    {label.fields.map((field, idx) => {
+                        const displayText = `${field.key}: ${field.value}`;
+                        return (
+                            <div key={idx} className="flex gap-1 min-w-0" title={displayText}>
+                                <span className="text-foreground overflow-hidden text-ellipsis whitespace-nowrap shrink min-w-0">
+                                    {field.key}:
+                                </span>
+                                <span className={`${field.valueColor} overflow-hidden text-ellipsis whitespace-nowrap shrink min-w-0`}>
+                                    {field.value}
+                                </span>
+                            </div>
+                        );
+                    })}
+                </div>
+            );
+        }
+    };
 
     return (
-        <div className={`max-w-[350px] overflow-visible bg-card border-2 border-border rounded-lg p-3 text-[13px] font-mono ${data.colorClass || 'text-card-foreground'}`}>
+        <div className="max-w-[350px] overflow-visible bg-card border-2 border-border rounded-lg p-3 text-[13px] font-mono text-card-foreground">
             {hasTarget && (
                 <Handle
                     type="target"
@@ -26,7 +55,7 @@ export const CustomJsonNode = memo(({ data, id }: NodeProps) => {
                     className="!bg-muted-foreground"
                 />
             )}
-            {label}
+            {renderLabel()}
             {sourceHandles.map((handle: { id: string; index: number }, idx: number) => {
                 // Calculate vertical position for each handle
                 const totalHandles = sourceHandles.length;

@@ -3,6 +3,22 @@ import { Node, Edge } from 'reactflow';
 import { getColorForValue } from './json-color-utils';
 import { createEdge } from './edge-utils';
 
+export type NodeField = {
+    key: string;
+    value: string;
+    valueColor: string;
+};
+
+export type NodeLabel = 
+    | { type: 'simple'; text: string; colorClass?: string }
+    | { type: 'object'; fields: NodeField[] };
+
+export type NodeData = {
+    label: NodeLabel;
+    hasParent: boolean;
+    sourceHandles: Array<{ id: string; index: number }>;
+};
+
 export function useJsonToGraph(): { jsonToNodes: (json: any) => { nodes: Node[]; edges: Edge[] } } {
     const jsonToNodes = useCallback((json: any): { nodes: Node[]; edges: Edge[] } => {
         const nodes: Node[] = [];
@@ -45,10 +61,13 @@ export function useJsonToGraph(): { jsonToNodes: (json: any) => { nodes: Node[];
                     id: nodeId,
                     type: 'customJson',
                     data: {
-                        label: 'null',
+                        label: {
+                            type: 'simple',
+                            text: 'null',
+                            colorClass: 'text-muted-foreground',
+                        },
                         hasParent: !!parent,
                         sourceHandles: [],
-                        colorClass: 'text-muted-foreground',
                     },
                     position: { x: 0, y: 0 },
                 });
@@ -65,63 +84,38 @@ export function useJsonToGraph(): { jsonToNodes: (json: any) => { nodes: Node[];
             }
 
             if (typeof obj === 'object') {
-                const lines: React.ReactNode[] = [];
+                const fields: NodeField[] = [];
 
                 // Process each property
                 const entries = Object.entries(obj);
                 entries.forEach(([key, value]) => {
-                    if (value === null) {
-                        const colorInfo = getColorForValue(value);
-                        const displayText = `${key}: ${colorInfo.label}`;
-                        lines.push(
-                            <div key={key} className="flex gap-1 min-w-0" title={displayText}>
-                                <span className="text-foreground overflow-hidden text-ellipsis whitespace-nowrap shrink min-w-0">{key}:</span>
-                                <span className={`${colorInfo.colorClass} overflow-hidden text-ellipsis whitespace-nowrap shrink min-w-0`}>{colorInfo.label}</span>
-                            </div>
-                        );
-                    } else if (Array.isArray(value)) {
-                        // Show array info inline, then traverse elements
-                        const displayText = `${key}: [${value.length} items]`;
-                        lines.push(
-                            <div key={key} className="flex gap-1 min-w-0" title={displayText}>
-                                <span className="text-foreground overflow-hidden text-ellipsis whitespace-nowrap shrink min-w-0">{key}:</span>
-                                <span className="text-chart-3 overflow-hidden text-ellipsis whitespace-nowrap shrink min-w-0">[{value.length} items]</span>
-                            </div>
-                        );
-                        traverse(value, nodeId, key);
-                    } else if (typeof value === 'object') {
-                        const objKeys = Object.keys(value);
-                        const displayText = `${key}: {${objKeys.length} keys}`;
-                        lines.push(
-                            <div key={key} className="flex gap-1 min-w-0" title={displayText}>
-                                <span className="text-foreground overflow-hidden text-ellipsis whitespace-nowrap shrink min-w-0">{key}:</span>
-                                <span className="text-chart-5 overflow-hidden text-ellipsis whitespace-nowrap shrink min-w-0">{`{${objKeys.length} keys}`}</span>
-                            </div>
-                        );
+                    const colorInfo = getColorForValue(value);
+                    let valueDisplay: string;
+                    
+                    // Check for null explicitly since typeof null === 'object' in JavaScript
+                    if (value !== null && (Array.isArray(value) || typeof value === 'object')) {
+                        valueDisplay = colorInfo.label;
                         traverse(value, nodeId, key);
                     } else {
-                        // Primitive value - color it based on type
-                        const colorInfo = getColorForValue(value);
-                        const valueStr = JSON.stringify(value);
-                        const displayText = `${key}: ${valueStr}`;
-                        lines.push(
-                            <div key={key} className="flex gap-1 min-w-0" title={displayText}>
-                                <span className="text-foreground overflow-hidden text-ellipsis whitespace-nowrap shrink min-w-0">{key}:</span>
-                                <span className={`${colorInfo.colorClass} overflow-hidden text-ellipsis whitespace-nowrap shrink min-w-0`}>{valueStr}</span>
-                            </div>
-                        );
+                        // Primitives and null - display inline
+                        valueDisplay = value === null ? colorInfo.label : JSON.stringify(value);
                     }
+
+                    fields.push({
+                        key,
+                        value: valueDisplay,
+                        valueColor: colorInfo.colorClass,
+                    });
                 });
 
                 nodes.push({
                     id: nodeId,
                     type: 'customJson',
                     data: {
-                        label: (
-                            <div className="text-left">
-                                {lines}
-                            </div>
-                        ),
+                        label: {
+                            type: 'object',
+                            fields,
+                        },
                         hasParent: !!parent,
                         sourceHandles: [], // Will be populated later
                     },
@@ -148,10 +142,13 @@ export function useJsonToGraph(): { jsonToNodes: (json: any) => { nodes: Node[];
                     id: nodeId,
                     type: 'customJson',
                     data: {
-                        label: displayValue,
+                        label: {
+                            type: 'simple',
+                            text: displayValue,
+                            colorClass: colorInfo.colorClass,
+                        },
                         hasParent: !!parent,
                         sourceHandles: [],
-                        colorClass: colorInfo.colorClass,
                     },
                     position: { x: 0, y: 0 },
                 });
