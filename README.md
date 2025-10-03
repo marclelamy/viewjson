@@ -4,10 +4,10 @@
 
 A beautiful, client-side JSON visualizer that transforms your JSON data into an interactive node graph. Made with [React Flow](https://reactflow.dev/) <3
 
-## Why this exists
-- **No size limits** - There's no limit to how big your JSON can be. Your computer catching fire is the only limit
+## Why we built this
+- **No size limits** - There's no limit to how big your JSON can be. Your computer catching fire is the limit
 - **100% client-side** - legend says the app doesn't even run on a server
-- **Actually free** - No paywalls, no subscriptions, no upscale, no BS
+- **Actually free** - No account, no paywalls, no upscale cloud BS
 
 ## Features
 - Interactive node-based graph visualization
