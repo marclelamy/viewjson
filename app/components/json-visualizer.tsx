@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from 'react';
 import ReactFlow, {
-    Controls,
     Background,
     useNodesState,
     useEdgesState,

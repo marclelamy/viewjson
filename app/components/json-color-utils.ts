@@ -1,5 +1,5 @@
-const typeColorMap: Record<string, { colorClass: string; getLabel: (value: any) => string }> = {
-    string: { colorClass: 'text-chart-2', getLabel: (value) => value },
+const typeColorMap: Record<string, { colorClass: string; getLabel: (value: unknown) => string }> = {
+    string: { colorClass: 'text-chart-2', getLabel: (value) => value as string },
     number: { colorClass: 'text-chart-3', getLabel: (value) => String(value) },
     boolean: { colorClass: 'text-chart-5', getLabel: (value) => String(value) },
     default: { colorClass: 'text-foreground', getLabel: (value) => String(value) },
@@ -8,7 +8,7 @@ const typeColorMap: Record<string, { colorClass: string; getLabel: (value: any) 
     null: { colorClass: 'text-muted-foreground', getLabel: (value) => String(value) },
 };
 
-export function getColorForValue(value: any): { colorClass: string; label: string } {
+export function getColorForValue(value: unknown): { colorClass: string; label: string } {
     if (value === null) {
         return { colorClass: typeColorMap.null.colorClass, label: 'null' };
     }

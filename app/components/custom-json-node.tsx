@@ -77,3 +77,5 @@ export const CustomJsonNode = memo(({ data, id }: NodeProps) => {
     );
 });
 
+CustomJsonNode.displayName = 'CustomJsonNode';
+

@@ -25,12 +25,12 @@ export function useJsonLayout(): { getLayoutedElements: (nodes: Node[], edges: E
                 if (Array.isArray(children)) {
                     numLines = children.length;
                     // Estimate max line length from the array of JSX elements
-                    maxLineLength = Math.max(...children.map((child: any) => {
+                    maxLineLength = Math.max(...children.map((child: React.ReactNode) => {
                         if (typeof child === 'string') return child.length;
-                        if (child?.props?.children) {
+                        if (React.isValidElement(child) && (child.props as { children?: React.ReactNode })?.children) {
                             // Count characters in nested spans
-                            const textContent = React.Children.toArray(child.props.children)
-                                .map((c: any) => typeof c === 'string' ? c : (c?.props?.children || ''))
+                            const textContent = React.Children.toArray((child.props as { children?: React.ReactNode }).children)
+                                .map((c: React.ReactNode) => typeof c === 'string' ? c : (React.isValidElement(c) ? (c.props as { children?: React.ReactNode })?.children || '' : ''))
                                 .join('');
                             return textContent.length;
                         }

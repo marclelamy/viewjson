@@ -49,7 +49,7 @@ export default function Home() {
     return (
         <ResizablePanelGroup direction="horizontal" className="h-screen w-screen overflow-hidden bg-background">
             {/* Left Panel - Text Area */}
-            <ResizablePanel defaultSize={30} minSize={0} maxSize={100}>
+            <ResizablePanel defaultSize={20} minSize={0} maxSize={100}>
                 <div className="h-full flex flex-col border-r border-border">
                     <div className="bg-card px-6 py-4 border-b border-border">
                         <h1 className="text-xl font-bold text-card-foreground">JSON Input</h1>
@@ -90,7 +90,7 @@ export default function Home() {
             <ResizableHandle withHandle />
 
             {/* Right Panel - React Flow Visualization */}
-            <ResizablePanel defaultSize={70} minSize={0} maxSize={100}>
+            <ResizablePanel defaultSize={80} minSize={0} maxSize={100}>
                 <div className="h-full flex flex-col">
                     <div className="bg-card px-6 py-4 border-b border-border">
                         <h1 className="text-xl font-bold text-card-foreground">Graph Visualization</h1>

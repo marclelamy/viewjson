@@ -19,8 +19,8 @@ export type NodeData = {
     sourceHandles: Array<{ id: string; index: number }>;
 };
 
-export function useJsonToGraph(): { jsonToNodes: (json: any) => { nodes: Node[]; edges: Edge[] } } {
-    const jsonToNodes = useCallback((json: any): { nodes: Node[]; edges: Edge[] } => {
+export function useJsonToGraph(): { jsonToNodes: (json: unknown) => { nodes: Node[]; edges: Edge[] } } {
+    const jsonToNodes = useCallback((json: unknown): { nodes: Node[]; edges: Edge[] } => {
         const nodes: Node[] = [];
         const edges: Edge[] = [];
         let nodeCounter = 0;
@@ -29,7 +29,7 @@ export function useJsonToGraph(): { jsonToNodes: (json: any) => { nodes: Node[];
         const childrenMap = new Map<string, string[]>(); // parent -> array of child IDs
         const parentMap = new Map<string, string>(); // child -> parent ID
 
-        const traverse = (obj: any, parent: string, edgeLabel?: string) => {
+        const traverse = (obj: unknown, parent: string, edgeLabel?: string) => {
             const nodeId = parent ? `${parent}-${nodeCounter++}` : `root-${nodeCounter++}`;
 
             // Handle arrays specially - they don't create nodes, just pass through to elements
