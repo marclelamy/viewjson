@@ -94,7 +94,7 @@
     --accent: oklch(0.274 0.006 286.033);
     --accent-foreground: oklch(0.985 0 0);
     --destructive: oklch(0.704 0.191 22.216);
-    --border: oklch(1 0 0 / 10%);
+    --border: oklch(0.4 0.02 286 / 50%);
     --input: oklch(1 0 0 / 15%);
     --ring: oklch(0.554 0.135 66.442);
     --chart-1: oklch(0.488 0.243 264.376);
@@ -117,7 +117,18 @@
   * {
     @apply border-border outline-ring/50;
   }
+  html,
   body {
     @apply bg-background text-foreground;
+    height: 100%;
+    margin: 0;
+    padding: 0;
   }
+}
+
+/* ReactFlow edge labels - force monospace font */
+.react-flow__edge-text {
+  font-family: var(--font-geist-mono), monospace !important;
+  font-weight: 600 !important;
+  font-size: 12px !important;
 }
