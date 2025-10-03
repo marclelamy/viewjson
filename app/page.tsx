@@ -102,7 +102,7 @@ export default function Home() {
                             spellCheck={false}
                             wrap="off"
                             style={{
-                                lineHeight: '1.5rem',
+                                lineHeight: '1.2rem',
                                 whiteSpace: 'pre',
                             }}
                         />
